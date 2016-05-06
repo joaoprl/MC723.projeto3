@@ -12,6 +12,15 @@ MC723 - Laboratório de Projetos de Sistemas Computacionais
 Projeto 2 - Desempenho do Processador
 ====
 
+Objetivos:
+----
+Medir desempenho de um processador em certos pontos:
+* Tamanho do pipeline: 5, 7 e 13 estágios
+* Processador escalar vs superescalar
+* Hazard de dados e controle
+* Branch predictor (2 configurações distintas)
+* Cache (4 configurações distintas)
+
 Sumário
 ----
 * [Roteiro](ROTEIRO.md)
