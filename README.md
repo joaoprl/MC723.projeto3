@@ -28,11 +28,11 @@ Roteiro:
 * GSM coder (large)
 * Dijkstra (large)
  
-#####Hazard de dados e de controle
-* Load e Store ou quaisquers duas instruções que compartilham dados de um mesmo registrador
-* Jump e branch
+#####Hazards
+* Hazard de dados: Surge quando uma instrução depende de uma anterior que ainda está no pipeline. Pode ser corrigido com forwarding.
+* Hazard de controle: Ocorre quando o instruction fetch busca por uma instrução que nunca será executada (por causa de branches). Pode ser minimizado com branch predictions.
 
-Para contar o número de chamadas a essas funções, utilizaremos a flag "-s" do simulador
+Para avaliar os hazards modificaremos o código do simulador, pois é necessário manter um histórico de eventos para computar dependências de instruções.
 
 #####Eventos a serem avaliados:
 * Miss L1
@@ -47,13 +47,24 @@ Para contar o número de chamadas a essas funções, utilizaremos a flag "-s" do
 * Branch
   * Always taken
   * Branch history table
+  * Sem branch prediction
 * Configurações de cache
-  * Serão utilizados os melhores casos do exercício anterior pra cada benchmark (4 diferentes)
+  1. Configuração encontrada no exercício 2 por um dos integrantes.
+  2. Baseado no processador AMD FX-8350
+  3. Baseado no processador AMD Athlon II P340
+
+|Config | L1 isize | L1 ibsize | L1 dsize | L1 dbsize | L2 usize | L2 ubsize |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 32k | 64 | 64k | 64 | 256k | 16 |
+| 2 | 128k | 64 | 128k | 64 | 1024k | 64 |
+| 3 | 256k | 64 | 128k | 64 | 8192k | 64 |
+ 
+
 * Pipeline
-  * 5 estágios
+  * __5 estágios__ (configuração escolhida)
   * 7 estágios
   * 13 estágios
-  
+
 
 #####Cronograma:
 * 1ª semana:
