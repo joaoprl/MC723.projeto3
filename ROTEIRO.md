@@ -58,7 +58,6 @@ Para avaliar os hazards modificaremos o código do simulador, pois é necessári
 Referências
 ----
 1. http://www.ic.unicamp.br/~lucas/teaching/mc723/2016-1/p2.html
-
-
-
-
+2. https://github.com/jpedrorl/MC723/tree/master/exercicio2
+3. http://www.notebookcheck.net/AMD-FX-Series-Desktop-FX-8350-Notebook-Processor.91968.0.html
+4. http://www.notebookcheck.net/AMD-Athlon-II-P340-Notebook-Processor.37883.0.html
