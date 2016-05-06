@@ -23,8 +23,8 @@ Medir desempenho de um processador em certos pontos:
 
 Sumário
 ----
-* [Roteiro](ROTEIRO.md)
-* [Tratamento de Hazards](HAZARD_TREATMENT.md)
+* [**Roteiro**](ROTEIRO.md)
+* [**Tratamento de Hazards**](HAZARD_TREATMENT.md)
 
 Referências
 ----
