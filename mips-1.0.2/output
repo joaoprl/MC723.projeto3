@@ -10686,7 +10686,7 @@ DBG: jump 0 0 0
 DBG:    ---- 
 DBG: ----- PC=0x6bb8 ----- 1094
 DBG: sh r2, 2(r16)
-DBG: Result = 0xe
+DBG: Result = 0x8
 DBG:    ---- PIPELINE
 DBG: store 0 2 0
 DBG: undefined 0 0 0
@@ -10986,7 +10986,7 @@ DBG: jump 0 0 0
 DBG:    ---- 
 DBG: ----- PC=0x6bf4 ----- 1129
 DBG: sh r2, 14(r16)
-DBG: Result = 0x880b
+DBG: Result = 0x8805
 DBG:    ---- PIPELINE
 DBG: store 0 2 0
 DBG: undefined 0 0 0
@@ -11226,7 +11226,7 @@ DBG: jump 0 0 0
 DBG:    ---- 
 DBG: ----- PC=0x6c24 ----- 1157
 DBG: sw r2, 20(r16)
-DBG: Result = 0x5735f992
+DBG: Result = 0x57360140
 DBG:    ---- PIPELINE
 DBG: store 0 2 0
 DBG: undefined 0 0 0
@@ -11286,7 +11286,7 @@ DBG: jump 0 0 0
 DBG:    ---- 
 DBG: ----- PC=0x6c30 ----- 1164
 DBG: sw r2, 28(r16)
-DBG: Result = 0x5735f992
+DBG: Result = 0x57360140
 DBG:    ---- PIPELINE
 DBG: store 0 2 0
 DBG: undefined 0 0 0
@@ -11356,7 +11356,7 @@ DBG: common 4 17 0
 DBG:    ---- 
 DBG: ----- PC=0x6c40 ----- 1172
 DBG: sw r2, 36(r16)
-DBG: Result = 0x5735e965
+DBG: Result = 0x5735fe21
 DBG:    ---- PIPELINE
 DBG: store 0 2 0
 DBG: load 31 0 0
@@ -26466,11 +26466,11 @@ DBG: ----- PC=0x660c ----- 2725
 DBG: nop
 ArchC: -------------------- Simulation Finished --------------------
 DBG: @@@ end behavior @@@
-DBG: >>>> BUBBLES: 37
+DBG: >>>> BUBBLES: 145
 
 Info: /OSCI/SystemC: Simulation stopped by user.
 ArchC: Simulation statistics
-    Times: 0.01 user, 0.02 system, 0.04 real
+    Times: 0.01 user, 0.03 system, 0.04 real
     Number of instructions executed: 2727
     Simulation speed: (too fast to be precise)
 

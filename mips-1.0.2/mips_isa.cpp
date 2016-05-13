@@ -103,44 +103,44 @@ int BR_PR = 1;
 
 void TestaControlHazard()
 {
-	if (pipeline[0].type == jump)
+  if (pipeline[0].type == jump)
+    {
+      bubble += 0;
+    }
+  if(pipeline[0].type == branch) 
+    {
+      if (BR_PR) 
 	{
-		bubbles += 3;
+	  if(taken != hPredictor) 
+	    {
+	      hPredictor = taken;
+	      bubble += 2;
+	      return;
+	    }
 	}
-	if(pipeline[0].type == branch) 
+      else //-bit predictor
 	{
-		if (BR_PR) 
+	  if (taken != hPredictor)
+	    {
+	      bubble += 5;
+	      count++;
+	      if (count >1)
 		{
-			if(taken != hPredictor) 
-			{
-				hPredictor = taken;
-				bubbles += 5;
-				return;
-			}
+		  count = 0;
+		  hPredictor = taken;
 		}
-		else //-bit predictor
-		{
-			if (taken != hPredictor)
-			{
-				bubbles += 5;
-				count++;
-				if (count >1)
-				{
-					count = 0;
-					hPredictor = taken;
-				}
-			}
-			else
-				count = 0;
-		}
+	    }
+	  else
+	    count = 0;
 	}
-	return;
+    }
+  return;
 }
 
 void update()
 { 
   checkhazards();
-  TestaControlHazard()
+  TestaControlHazard();
 
   dbg_printf("   ---- PIPELINE\n");
   for(int i = 0; i < PIPELINE_SIZE; i++)
@@ -838,14 +838,14 @@ void ac_behavior( beq )
   
   dbg_printf("beq r%d, r%d, %d\n", rt, rs, imm & 0xFFFF);
   if( RB[rs] == RB[rt] ){
-	  taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }
   else
-	taken = 0;
+    taken = 0;
 };
 
 //!Instruction bne behavior method.
@@ -855,14 +855,14 @@ void ac_behavior( bne )
   
   dbg_printf("bne r%d, r%d, %d\n", rt, rs, imm & 0xFFFF);
   if( RB[rs] != RB[rt] ){
-	  taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
 };
 
 //!Instruction blez behavior method.
@@ -872,14 +872,14 @@ void ac_behavior( blez )
   
   dbg_printf("blez r%d, %d\n", rs, imm & 0xFFFF);
   if( (RB[rs] == 0 ) || (RB[rs]&0x80000000 ) ){
-	taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2), 1;
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
 };
 
 //!Instruction bgtz behavior method.
@@ -889,14 +889,14 @@ void ac_behavior( bgtz )
   
   dbg_printf("bgtz r%d, %d\n", rs, imm & 0xFFFF);
   if( !(RB[rs] & 0x80000000) && (RB[rs]!=0) ){
-	taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
 };
 
 //!Instruction bltz behavior method.
@@ -906,14 +906,14 @@ void ac_behavior( bltz )
   
   dbg_printf("bltz r%d, %d\n", rs, imm & 0xFFFF);
   if( RB[rs] & 0x80000000 ){
-	taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
 };
 
 //!Instruction bgez behavior method.
@@ -923,14 +923,14 @@ void ac_behavior( bgez )
   
   dbg_printf("bgez r%d, %d\n", rs, imm & 0xFFFF);
   if( !(RB[rs] & 0x80000000) ){
-	taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
 };
 
 //!Instruction bltzal behavior method.
@@ -941,14 +941,14 @@ void ac_behavior( bltzal )
   dbg_printf("bltzal r%d, %d\n", rs, imm & 0xFFFF);
   RB[Ra] = ac_pc+4; //ac_pc is pc+4, we need pc+8
   if( RB[rs] & 0x80000000 ){
-	taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
   dbg_printf("Return = %#x\n", ac_pc+4);
 };
 
@@ -960,14 +960,14 @@ void ac_behavior( bgezal )
   dbg_printf("bgezal r%d, %d\n", rs, imm & 0xFFFF);
   RB[Ra] = ac_pc+4; //ac_pc is pc+4, we need pc+8
   if( !(RB[rs] & 0x80000000) ){
-	taken = 1;
+    taken = 1;
 #ifndef NO_NEED_PC_UPDATE
     npc = ac_pc + (imm<<2);
 #endif 
     dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
   }	
   else
-	taken = 0;
+    taken = 0;
   dbg_printf("Return = %#x\n", ac_pc+4);
 };
 
