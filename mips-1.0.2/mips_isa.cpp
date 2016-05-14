@@ -61,7 +61,7 @@ int bubble = 0;
 #define PIPELINE_SIZE 5
 
 //TODO: Change this when wanted
-//#define IS_SUPERESCALAR
+#define IS_SUPERESCALAR
 #ifdef IS_SUPERESCALAR
 	#define SUPERESCALAR_SIZE 2
 #else
@@ -70,15 +70,39 @@ int bubble = 0;
 
 MyInstruction pipeline[SUPERESCALAR_SIZE][PIPELINE_SIZE];
 
+//// Use PIPELINE(x) como se fosse o vetor pipeline
 int current_pipe_index;
-#define NEXT_PIPE() current_pipe_index = ( current_pipe_index ? 0 : 1 )	
 #define PIPELINE(x) pipeline[current_pipe_index][x]
+
+#define FIRST_PIPE(x) pipeline[0][x]
+#define SECOND_PIPE(x) pipeline[1][x]
+
+#define IS_PIPE_FILLED current_pipe_index == 0
+
+void setPipeline(MyInsType type, int r1, int r2, int r3)
+{
+  PIPELINE(0).type = type;
+  PIPELINE(0).r1 = r1;
+  PIPELINE(0).r2 = r2;
+  PIPELINE(0).r3 = r3;
+}
 
 void checkhazards(){
   if(PIPELINE(0).type == undefined) {
     return;
   }
-			
+
+  #ifdef IS_SUPERESCALAR		
+  
+  //TODO: This is the cheetos
+  // Caso RAW
+  //
+  
+  
+  
+  
+  #else
+
   // r1 só recebe dados
   // r2 e r3 só lê dados
   // Caso RAW
@@ -86,9 +110,7 @@ void checkhazards(){
     dbg_printf("DATA HAZARD DETECTED\n");
     bubble++;
   }
-
-  
-  
+  #endif  
 }
 
 const char *getStr(MyInsType t){
@@ -163,12 +185,30 @@ void update()
     dbg_printf("%s %d %d %d\n", getStr(PIPELINE(i).type), PIPELINE(i).r1, PIPELINE(i).r2, PIPELINE(i).r3);
   dbg_printf("   ---- \n");
   
+  #ifdef IS_SUPERESCALAR
+  
+  //Deslocar temporalmente o pipeline
+  if( FIRST_PIPE(0).type != undefined && SECOND_PIPE(0).type != undefined){
+	for (int i = PIPELINE_SIZE-1; i >= 1; i--){
+		FIRST_PIPE(i) = FIRST_PIPE(i-1);
+		SECOND_PIPE(i) = SECOND_PIPE(i-1); 
+	}
+	current_pipe_index = 1;
+	setPipeline(undefined,0,0,0);
+	current_pipe_index = 0;
+	setPipeline(undefined,0,0,0);
+  }  else if(FIRST_PIPE(0).type == undefined) {
+	current_pipe_index = 0;
+  } else {
+	  current_pipe_index = 1;
+  }
+  #else
+
+  //Deslocar temporalmente o pipeline
   for (int i = PIPELINE_SIZE-1; i >= 1; i--)
     PIPELINE(i) = PIPELINE(i-1);    
   PIPELINE(0) = null_instruction;
-  
-  #ifdef IS_SUPERESCALAR
-  NEXT_PIPE();
+ 
   #endif
 }
 
@@ -196,6 +236,26 @@ void ac_behavior( Type_J ){}
 //!Behavior called before starting simulation
 void ac_behavior(begin)
 {
+  #ifdef IS_SUPERESCALAR
+  for(int i  = 0; i< PIPELINE_SIZE; i++){
+		FIRST_PIPE(i).type = undefined;
+		FIRST_PIPE(i).r1 = 0;
+		FIRST_PIPE(i).r2 = 0;
+		FIRST_PIPE(i).r3 = 0;
+		
+		SECOND_PIPE(i).type = undefined;
+		SECOND_PIPE(i).r1 = 0;
+		SECOND_PIPE(i).r2 = 0;
+		SECOND_PIPE(i).r3 = 0;
+  } 
+  #else
+  for(int i = 0; i < PIPELINE_SIZE; i++){
+        PIPELINE(i).type = undefined;
+		PIPELINE(i).r1 = 0;
+		PIPELINE(i).r2 = 0;
+		PIPELINE(i).r3 = 0;
+  }
+  #endif
   dbg_printf("@@@ begin behavior @@@\n");
   RB[0] = 0;
   npc = ac_pc + 4;
@@ -216,14 +276,6 @@ void ac_behavior(end)
   dbg_printf("@@@ end behavior @@@\n");
   dbg_printf(">>>> BUBBLES: %d\n", bubble);
   printf(">>>> BUBBLES: %d\n", bubble);
-}
-
-void setPipeline(MyInsType type, int r1, int r2, int r3)
-{
-  PIPELINE(0).type = type;
-  PIPELINE(0).r1 = r1;
-  PIPELINE(0).r2 = r2;
-  PIPELINE(0).r3 = r3;
 }
 
 //!Instruction lb behavior method.
