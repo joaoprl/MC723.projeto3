@@ -59,20 +59,36 @@ MyInstruction null_instruction = { .type = undefined, .r1 = 0, .r2 = 0, .r3 = 0 
 int bubble = 0;
 
 #define PIPELINE_SIZE 5
-MyInstruction pipeline[PIPELINE_SIZE];
+
+//TODO: Change this when wanted
+//#define IS_SUPERESCALAR
+#ifdef IS_SUPERESCALAR
+	#define SUPERESCALAR_SIZE 2
+#else
+	#define SUPERESCALAR_SIZE 1
+#endif
+
+MyInstruction pipeline[SUPERESCALAR_SIZE][PIPELINE_SIZE];
+
+int current_pipe_index;
+#define NEXT_PIPE() current_pipe_index = ( current_pipe_index ? 0 : 1 )	
+#define PIPELINE(x) pipeline[current_pipe_index][x]
 
 void checkhazards(){
-  if(pipeline[0].type == undefined) {
+  if(PIPELINE(0).type == undefined) {
     return;
   }
 			
   // r1 só recebe dados
-  //r2 e r3 só lê dados
-  // Caso RAW	
-  if(pipeline[1].type == load && (pipeline[1].r1 == pipeline[0].r2 || pipeline[1].r1 == pipeline[0].r3)) {
+  // r2 e r3 só lê dados
+  // Caso RAW
+  if(PIPELINE(1).type == load && (PIPELINE(1).r1 == PIPELINE(0).r2 || PIPELINE(1).r1 == PIPELINE(0).r3)) {
     dbg_printf("DATA HAZARD DETECTED\n");
     bubble++;
   }
+
+  
+  
 }
 
 const char *getStr(MyInsType t){
@@ -99,15 +115,15 @@ int hPredictor;
 int count;
 
 //BR_PR 1-> alwaystaken 0-> dynamic
-int BR_PR = 1;
+#define BR_PR 1
 
 void TestaControlHazard()
 {
-  if (pipeline[0].type == jump)
+  if (PIPELINE(0).type == jump)
     {
       bubble += 0;
     }
-  if(pipeline[0].type == branch) 
+  if(PIPELINE(0).type == branch) 
     {
       if (BR_PR) 
 	{
@@ -118,7 +134,7 @@ void TestaControlHazard()
 	      return;
 	    }
 	}
-      else //-bit predictor
+      else //2-bit predictor
 	{
 	  if (taken != hPredictor)
 	    {
@@ -144,13 +160,16 @@ void update()
 
   dbg_printf("   ---- PIPELINE\n");
   for(int i = 0; i < PIPELINE_SIZE; i++)
-    dbg_printf("%s %d %d %d\n", getStr(pipeline[i].type), pipeline[i].r1, pipeline[i].r2, pipeline[i].r3);
+    dbg_printf("%s %d %d %d\n", getStr(PIPELINE(i).type), PIPELINE(i).r1, PIPELINE(i).r2, PIPELINE(i).r3);
   dbg_printf("   ---- \n");
   
   for (int i = PIPELINE_SIZE-1; i >= 1; i--)
-    pipeline[i] = pipeline[i-1];
-      
-  pipeline[0] = null_instruction;
+    PIPELINE(i) = PIPELINE(i-1);    
+  PIPELINE(0) = null_instruction;
+  
+  #ifdef IS_SUPERESCALAR
+  NEXT_PIPE();
+  #endif
 }
 
 /**#######################################################################**/
@@ -201,10 +220,10 @@ void ac_behavior(end)
 
 void setPipeline(MyInsType type, int r1, int r2, int r3)
 {
-  pipeline[0].type = type;
-  pipeline[0].r1 = r1;
-  pipeline[0].r2 = r2;
-  pipeline[0].r3 = r3;
+  PIPELINE(0).type = type;
+  PIPELINE(0).r1 = r1;
+  PIPELINE(0).r2 = r2;
+  PIPELINE(0).r3 = r3;
 }
 
 //!Instruction lb behavior method.
