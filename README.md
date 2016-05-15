@@ -71,7 +71,9 @@ __Escalar:__ Como o único hazard de dados que não pode ser resolvido por forwa
 
 __Superescalar:__ Neste caso, foi utilizado um pipeline 2-way.
 
-Como todos os tipos de hazards de dados (RAW, WAR e WAW) podem acontecer, 
+Como todos os tipos de hazards de dados (RAW, WAR e WAW) podem acontecer, foi conferido extensivamente as possibilidades de causar uma bolha.
+
+Foi feita uma máscara (vetor de registradores) para ver se o registrador já foi atualizado na devida hora. Utiliza-se a máscara para conferir se o registrador a ser utilizado ainda não foi atualizado. Caso isso seja verdade, cria-se uma bolha. 
 
 
 
@@ -80,7 +82,9 @@ Foram feitos três tipos de configurações em relação ao branch prediction: s
 
 __Sem Branch prediction:__ O código apenas soma as bolhas que ocorrerão.
 
-__Branch Prediction Always Taken:__ Neste caso, só é contabilizada as bolhas caso o branch não ocorrer. No código, existe uma variável 
+__Branch Prediction Always Taken:__ Neste caso, só é contabilizada as bolhas caso o branch não ocorrer. No código, existe uma variável que verifica se o branch foi feito. Caso não tenha sido feito, contabiliza as bolhas a mais.
+
+__Branch Prediction 2-bit predictor:__ Por fim, utiliza uma verificação dependendo de quantas vezes foi errada a predição, modificando-a caso tenha ocorrido, porém toda vez que erra, é contabilizada as bolhas. Por exemplo: predictor começa como taken; caso erre a predição 2 vezes, predictor se torna not taken, e por assim vai.
 
 ## Análise de Resultados
 
