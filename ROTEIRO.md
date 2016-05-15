@@ -15,7 +15,7 @@ Para avaliar os hazards modificaremos o código do simulador, pois é necessári
 #####Eventos a serem avaliados:
 * Miss L1
 * Miss L2
-* Número de Hazards de controle
+* Número de Hazards
 * Numero de branchs realizados
 * Número de branchs previstos
 * Ciclos 
