@@ -25,6 +25,43 @@ Sumário
 ----
 * [**Roteiro**](ROTEIRO.md)
 * [**Tratamento de Hazards**](HAZARD_TREATMENT.md)
+ 
+Traces
+----
+
+Hazards de dados
+----
+Após descobrir os tipos de hazards de dados existentes (veja Sumário), foram feitas formas diferentes em relação à escalar e superescalar. Porém, a ideia básica foi a mesma: criar um vetor de structs com as informações da instrução em cada estágio.
+
+__Escalar:__ Como o único hazard de dados que não pode ser resolvido por forwarding é RAW, basta conferir se a instrução anterior é do tipo _load_ e se o registrador é um dos registradores da instrução atual.
+
+__Superescalar:__ Neste caso, foi utilizado um pipeline 2-way.
+
+Como todos os tipos de hazards de dados (RAW, WAR e WAW) podem acontecer, 
+
+
+
+Hazards de Controle
+----
+Foram feitos três tipos de configurações em relação ao branch prediction: sem branch prediction, branch prediction always taken e branch prediction 2-bit prediction.
+
+__Sem Branch prediction:__ O código apenas soma as bolhas que ocorrerão.
+
+__Branch Prediction Always Taken:__ Neste caso, só é contabilizada as bolhas caso o branch não ocorrer. No código, existe uma variável 
+
+Tabelas
+----
+
+| Eventos | Config1 | Config2 | Config3 |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- |
+| Miss L1 |  |  |  |  |  |  |
+| Miss L2 |  |  |  |  |  |  |
+| Hazards |  |  |  |  |  |  |
+| Branch Realizados |  |  |  |  |  |  |
+| Branch Previstos |  |  |  |  |  |  |
+| Ciclos |  |  |  |  |  |  |
+| Tempo |  |  |  |  |  |  |
+
 
 Referências
 ----
