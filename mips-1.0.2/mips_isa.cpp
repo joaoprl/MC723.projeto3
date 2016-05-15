@@ -73,44 +73,23 @@ MyInstruction pipeline[SUPERESCALAR_SIZE][PIPELINE_SIZE];
 //// Use PIPELINE(x) como se fosse o vetor pipeline
 int current_pipe_index;
 #define PIPELINE(x) pipeline[current_pipe_index][x]
+#define NON_CURRENT_PIPELINE(x) pipeline[!current_pipe_index][x]
 
 #define FIRST_PIPE(x) pipeline[0][x]
 #define SECOND_PIPE(x) pipeline[1][x]
 
 #define IS_PIPE_FILLED current_pipe_index == 0
 
-void setPipeline(MyInsType type, int r1, int r2, int r3)
+#define BUBBLE newInstruction(undefined, 0, 0, 0)
+
+MyInstruction newInstruction(MyInsType type, int r1, int r2, int r3)
 {
-  PIPELINE(0).type = type;
-  PIPELINE(0).r1 = r1;
-  PIPELINE(0).r2 = r2;
-  PIPELINE(0).r3 = r3;
-}
-
-void checkhazards(){
-  if(PIPELINE(0).type == undefined) {
-    return;
-  }
-
-  #ifdef IS_SUPERESCALAR		
-  
-  //TODO: This is the cheetos
-  // Caso RAW
-  //
-  
-  
-  
-  
-  #else
-
-  // r1 só recebe dados
-  // r2 e r3 só lê dados
-  // Caso RAW
-  if(PIPELINE(1).type == load && (PIPELINE(1).r1 == PIPELINE(0).r2 || PIPELINE(1).r1 == PIPELINE(0).r3)) {
-    dbg_printf("DATA HAZARD DETECTED\n");
-    bubble++;
-  }
-  #endif  
+  MyInstruction ins;
+  ins.type = type;
+  ins.r1 = r1;
+  ins.r2 = r2;
+  ins.r3 = r3;
+  return ins;
 }
 
 const char *getStr(MyInsType t){
@@ -128,39 +107,164 @@ const char *getStr(MyInsType t){
     return "undefined";
 }
 
+void setPipeline(MyInsType type, int r1, int r2, int r3)
+{
+  PIPELINE(0).type = type;
+  PIPELINE(0).r1 = r1;
+  PIPELINE(0).r2 = r2;
+  PIPELINE(0).r3 = r3;
+}
+
+//Mascara que indica quais registradores nao terao seu valor atualizado
+//a tempo para a instrucao que acabou de entrar no fetch utilizar
+void get_non_updated_mask(char* mask){
+	mask[0] = -1;/*
+	mask[29] = -1;
+	mask[30] = -1;
+	mask[31] = -1;*/
+	for(int i = 1; i < 32; i++) mask[i] = 0;
+	
+	if(FIRST_PIPE(2).type == load && mask[ FIRST_PIPE(2).r1 ] != -1) {
+		mask[ FIRST_PIPE(2).r1 ] = 1;
+	}
+	if(SECOND_PIPE(2).type == load && mask[ SECOND_PIPE(2).r1] != -1) {
+		mask[ SECOND_PIPE(2).r1 ] = 1;
+	}
+}
+
+void checkhazards(){
+  #ifdef IS_SUPERESCALAR		
+  
+  // Checar somente se existem instruções para fetch
+  if(FIRST_PIPE(0).type == undefined || SECOND_PIPE(0).type == undefined){
+	return;
+  }
+  
+  //TODO: This is the cheetos 
+  do{
+	  
+	dbg_printf("<<<<<<<<<<<<<<<<<<<BEFORE CHECK HAZARDS>>>>>>>>>>>>>>>>>>>\n");
+	dbg_printf("   ---- FIRST_PIPE \n");
+		for(int i = 0; i < PIPELINE_SIZE; i++)
+		dbg_printf("%s %d %d %d\n", getStr(FIRST_PIPE(i).type), FIRST_PIPE(i).r1, FIRST_PIPE(i).r2, FIRST_PIPE(i).r3);
+	dbg_printf("   ---- SECOND_PIPE \n");
+		for(int i = 0; i < PIPELINE_SIZE; i++)
+		dbg_printf("%s %d %d %d\n", getStr(SECOND_PIPE(i).type), SECOND_PIPE(i).r1, SECOND_PIPE(i).r2, SECOND_PIPE(i).r3);
+	dbg_printf("   ---- \n");
+	
+	//Deslocando pipeline temporalmente a partir do segundo estagio
+	for (int i = PIPELINE_SIZE-1; i >= 2; i--){
+		FIRST_PIPE(i) = FIRST_PIPE(i-1);
+		SECOND_PIPE(i) = SECOND_PIPE(i-1);
+    }
+    
+    char non_updated[32];
+    get_non_updated_mask(non_updated);
+    
+	FIRST_PIPE(1) = SECOND_PIPE(1) = BUBBLE;
+	//Se ambos registradores r2 e r3 nao terao seus valores atualizados a tempo
+	if( (non_updated[ NON_CURRENT_PIPELINE(0).r2 ] == 1 || non_updated[ NON_CURRENT_PIPELINE(0).r3] == 1) /**RAW com problemas de load, assim como no processador escalar**/){
+		dbg_printf("BUBBLE DETECTED on %d\n", (!current_pipe_index) + 1);
+		bubble++;
+		if(NON_CURRENT_PIPELINE(0).type == load)
+			non_updated[ NON_CURRENT_PIPELINE(0).r1 ] = 1;
+	} else {
+		NON_CURRENT_PIPELINE(1) = NON_CURRENT_PIPELINE(0);
+		NON_CURRENT_PIPELINE(0) = BUBBLE;
+		if(NON_CURRENT_PIPELINE(1).type == load)
+			non_updated[ NON_CURRENT_PIPELINE(1).r1 ] = 1;
+	}
+	//TODO: The error is here
+	if((non_updated[ PIPELINE(0).r2 ] == 1 || non_updated[ PIPELINE(0).r3] == 1) || /** RAW com problemas de load **/
+	   ( NON_CURRENT_PIPELINE(0).r1 != 0 && (NON_CURRENT_PIPELINE(0).r1 == PIPELINE(0).r2 || NON_CURRENT_PIPELINE(0).r1 == PIPELINE(0).r3)) || /** RAW **/
+	   ( NON_CURRENT_PIPELINE(1).r1 != 0 && (NON_CURRENT_PIPELINE(1).r1 == PIPELINE(0).r2 || NON_CURRENT_PIPELINE(1).r1 == PIPELINE(0).r3)) || /** RAW **/
+	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r1) || (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(1).r1)) || /** WAW **/ 
+	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r2 || PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r3 )) || /** WAR **/
+	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(1).r2 || PIPELINE(0).r1 == NON_CURRENT_PIPELINE(1).r3 )) /** WAR **/){
+		dbg_printf("BUBBLE DETECTED on %d -- current\n", (current_pipe_index+1));
+		bubble++;
+	} else {
+		PIPELINE(1) = PIPELINE(0);
+		PIPELINE(0) = BUBBLE;
+	}
+
+	
+
+	dbg_printf("<<<<<<<<<<<<<<<<<<<AFTER CHECK HAZARDS>>>>>>>>>>>>>>>>>>>\n");
+	/*dbg_printf("  Mask :  --- [ ");
+	for (int i = 0; i < 32; i++)
+		dbg_printf("{%d, %d} ", i, non_updated[i]);
+	dbg_printf("]\n");
+	*/
+	dbg_printf("   ---- FIRST_PIPE \n");
+		for(int i = 0; i < PIPELINE_SIZE; i++)
+		dbg_printf("%s %d %d %d\n", getStr(FIRST_PIPE(i).type), FIRST_PIPE(i).r1, FIRST_PIPE(i).r2, FIRST_PIPE(i).r3);
+	dbg_printf("   ---- SECOND_PIPE \n");
+		for(int i = 0; i < PIPELINE_SIZE; i++)
+		dbg_printf("%s %d %d %d\n", getStr(SECOND_PIPE(i).type), SECOND_PIPE(i).r1, SECOND_PIPE(i).r2, SECOND_PIPE(i).r3);
+	dbg_printf("   ---- \n");
+	
+	
+
+	
+	
+		
+  } while(FIRST_PIPE(0).type!=undefined && SECOND_PIPE(0).type!=undefined);
+  
+  
+  #else
+  
+  //Checar somente se existem instruções para fetch
+  if(PIPELINE(0).type == undefined) {
+	return;
+  }
+  // r1 só recebe dados
+  // r2 e r3 só lê dados
+  // Caso RAW
+  if(PIPELINE(1).type == load && (PIPELINE(1).r1 == PIPELINE(0).r2 || PIPELINE(1).r1 == PIPELINE(0).r3)) {
+    dbg_printf("DATA HAZARD DETECTED\n");
+    bubble++;
+  }
+  
+  dbg_printf("   ---- PIPELINE \n");
+  for(int i = 0; i < PIPELINE_SIZE; i++)
+    dbg_printf("%s %d %d %d\n", getStr(PIPELINE(i).type), PIPELINE(i).r1, PIPELINE(i).r2, PIPELINE(i).r3);
+  dbg_printf("   ---- \n");
+  #endif  
+}
+
 //taken-> 1 se fez o salto, 0 caso contrário
 int taken;
 
 //historico 
-int hPredictor;
+int hPredictor = 1;
 //count eh usado no 2-bit predictor
 int count;
 
-//BR_PR 1-> alwaystaken 0-> dynamic
+//BR_PR 0-> sem branch predictor, 1-> alwaystaken, 2-> dynamic
 #define BR_PR 1
 
 void TestaControlHazard()
 {
   if (PIPELINE(0).type == jump)
     {
-      bubble += 0;
+      bubble += 2;
     }
   if(PIPELINE(0).type == branch) 
     {
-      if (BR_PR) 
+      if (BR_PR == 1) //Alwways taken
 	{
 	  if(taken != hPredictor) 
 	    {
-	      hPredictor = taken;
 	      bubble += 2;
 	      return;
 	    }
 	}
-      else //2-bit predictor
+      else if (BR_PR == 2)//2-bit predictor
 	{
 	  if (taken != hPredictor)
 	    {
-	      bubble += 5;
+	      bubble += 2;
 	      count++;
 	      if (count >1)
 		{
@@ -171,6 +275,8 @@ void TestaControlHazard()
 	  else
 	    count = 0;
 	}
+	else
+		bubble += 2;
     }
   return;
 }
@@ -179,11 +285,6 @@ void update()
 { 
   checkhazards();
   TestaControlHazard();
-
-  dbg_printf("   ---- PIPELINE\n");
-  for(int i = 0; i < PIPELINE_SIZE; i++)
-    dbg_printf("%s %d %d %d\n", getStr(PIPELINE(i).type), PIPELINE(i).r1, PIPELINE(i).r2, PIPELINE(i).r3);
-  dbg_printf("   ---- \n");
   
   #ifdef IS_SUPERESCALAR
   
@@ -193,22 +294,20 @@ void update()
 		FIRST_PIPE(i) = FIRST_PIPE(i-1);
 		SECOND_PIPE(i) = SECOND_PIPE(i-1); 
 	}
-	current_pipe_index = 1;
-	setPipeline(undefined,0,0,0);
+	FIRST_PIPE(0) = SECOND_PIPE(0) = BUBBLE;
 	current_pipe_index = 0;
-	setPipeline(undefined,0,0,0);
   }  else if(FIRST_PIPE(0).type == undefined) {
 	current_pipe_index = 0;
   } else {
 	  current_pipe_index = 1;
   }
+  
   #else
-
   //Deslocar temporalmente o pipeline
   for (int i = PIPELINE_SIZE-1; i >= 1; i--)
     PIPELINE(i) = PIPELINE(i-1);    
   PIPELINE(0) = null_instruction;
- 
+  
   #endif
 }
 
