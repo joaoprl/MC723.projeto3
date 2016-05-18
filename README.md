@@ -73,14 +73,14 @@ __Superescalar:__ Neste caso, foi utilizado um pipeline 2-way.
 
 Como todos os tipos de hazards de dados (RAW, WAR e WAW) podem acontecer, foi conferido extensivamente as possibilidades de causar uma bolha.
 
-Foi feita uma máscara (vetor de registradores) para ver se o registrador já foi atualizado na devida hora. Utiliza-se a máscara para conferir se o registrador a ser utilizado ainda não foi atualizado. Caso isso seja verdade, cria-se uma bolha. 
+Foi feita uma máscara (vetor de registradores) para ver se o registrador já foi atualizado na devida hora, em instruções de load. Utiliza-se a máscara para conferir se o registrador a ser utilizado ainda não foi atualizado. Caso isso seja verdade, cria-se uma bolha. 
 
-
+Outro possível caso, é quando duas instruções ao estarem no IF do pipeline ao mesmo tempo, utilizam os mesmos registradores, ocasionando mais uma bolha.
 
 #### Hazards de Controle
 Foram feitos três tipos de configurações em relação ao branch prediction: sem branch prediction, branch prediction always taken e branch prediction 2-bit prediction.
 
-__Sem Branch prediction:__ O código apenas soma as bolhas que ocorrerão.
+__Sem Branch prediction:__ O código apenas soma as bolhas que ocorrem.
 
 __Branch Prediction Always Taken:__ Neste caso, só é contabilizada as bolhas caso o branch não ocorrer. No código, existe uma variável que verifica se o branch foi feito. Caso não tenha sido feito, contabiliza as bolhas a mais.
 
