@@ -88,7 +88,56 @@ __Branch Prediction 2-bit predictor:__ Por fim, utiliza uma verificação depend
 
 ## Análise de Resultados
 
-| Eventos | Config1 | Config2 | Config3 |  |  |  |
+Pra cada benchmark:
+
+| Configuração | Cache | Escalar ou Super | Branch Predictor | 
+| --- | --- | --- | --- |
+| Config1 | 1 | Escalar | Sem branch |
+| Config2 | 1 | Escalar | Estático |
+| Config3 | 2 | Escalar | Dinamico |
+| Config4 | 2 | Super | Sem branch |
+| Config5 | 3 | Super | Estático |
+| Config6 | 3 | Super | Dinamico |
+
+__Jpeg coder (small)__
+
+| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Miss L1 |  |  |  |  |  |  |
+| Miss L2 |  |  |  |  |  |  |
+| Hazards |  |  |  |  |  |  |
+| Branch Realizados |  |  |  |  |  |  |
+| Branch Previstos |  |  |  |  |  |  |
+| Ciclos |  |  |  |  |  |  |
+| Tempo |  |  |  |  |  |  |
+
+__Rijndael coder (small)__
+
+| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Miss L1 |  |  |  |  |  |  |
+| Miss L2 |  |  |  |  |  |  |
+| Hazards |  |  |  |  |  |  |
+| Branch Realizados |  |  |  |  |  |  |
+| Branch Previstos |  |  |  |  |  |  |
+| Ciclos |  |  |  |  |  |  |
+| Tempo |  |  |  |  |  |  |
+
+__GSM coder (large)__
+
+| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Miss L1 |  |  |  |  |  |  |
+| Miss L2 |  |  |  |  |  |  |
+| Hazards |  |  |  |  |  |  |
+| Branch Realizados |  |  |  |  |  |  |
+| Branch Previstos |  |  |  |  |  |  |
+| Ciclos |  |  |  |  |  |  |
+| Tempo |  |  |  |  |  |  |
+
+__Dijkstra (large)__
+
+| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Miss L1 |  |  |  |  |  |  |
 | Miss L2 |  |  |  |  |  |  |
