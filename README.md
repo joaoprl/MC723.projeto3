@@ -111,6 +111,7 @@ __Jpeg coder (small)__
 | Branch Previstos | 0 | 3399132 | 2058392 |  |  |  |
 | Ciclos | 38098999 | 34839067 | 33755147 |  |  |  |
 | instruções | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 |
+| CPI | 1.28 | 1.17 | 1.13 |  |  |  |
 | Tempo | 0.767 | 0.812 | 0.805 |  |  |  |
 
 __Rijndael coder (small)__
@@ -125,6 +126,7 @@ __Rijndael coder (small)__
 | Branch Previstos | 0 | 890057 | 576390 |  |  |  |
 | Ciclos | 46059637 | 45459072 | 45188516 |  |  |  |
 | instruções | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 |
+| CPI | 1.06 | 1.04 | 1.04 |  |  |  |
 | Tempo | 1.077 | 1.089 | 1.192 |  |  |  |
 
 __GSM coder (large)__
@@ -139,6 +141,7 @@ __GSM coder (large)__
 | Branch Previstos | 0 | 1493003 | 484186 |  |  |  |
 | Ciclos | 30646228 | 29952147 | 29173753 |  |  |  |
 | instruções | 29857750 | 29857750 | 27460952 | 29857750 | 29857750 | 29857750 |
+| CPI | 1.12 | 1.09 | 1.06 |  |  |  |
 | Tempo | 0.669 | 0.681 | 0.691 |  |  |  |
 
 __Dijkstra (large)__
@@ -153,7 +156,38 @@ __Dijkstra (large)__
 | Branch Previstos | 0 | 41909436 | 10499229 |  |  |  |
 | Ciclos | 311799497 | 292206988 | 261912080 |  |  |  |
 | instruções | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 |
+| CPI | 1.39 | 1.31 | 1.17 |  |  |  |
 | Tempo | 5.596 | 6.309 | 6.687 |  |  |  |
+
+Em relação ao número de estágios do pipeline, podemos comparar com a configuração 1.
+
+__Jpeg coder (small)__
+
+| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
+| --- | --- | --- | --- | --- | --- |
+| 7 | 0.746 | 12043114 | 29857750 | 41900870 | 1.40 |
+| 13 |  |  |  |  |  |
+
+__Rijndael coder (small)__
+
+| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
+| --- | --- | --- | --- | --- | --- |
+| 7 | 1.089 | 4002124 | 43561697 | 47563827 | 1.09 |
+| 13 |  |  |  |  |  |
+
+__GSM coder (large)__
+
+| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
+| --- | --- | --- | --- | --- | --- |
+| 7 | 0.716 | 4912488 | 27460952 | 32373446 | 1.18 |
+| 13 |  |  |  |  |  |
+
+__Dijkstra (large)__
+
+| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
+| --- | --- | --- | --- | --- | --- |
+| 7 | 5.444 | 140303144 | 223691837 | 363994987 | 1.63 |
+| 13 |  |  |  |  |  |
 
 ## Conclusão
 
