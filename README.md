@@ -149,6 +149,8 @@ __Dijkstra (large)__
 
 ## Conclusão
 
+É possível dizer que os resultados foram coerentes, já que a princípio utilizamos o código do hello.c inicialmente para testar as configurações. Como a mudança feita é no código do mips_isa.cpp, os benchmarks influenciam apenas nas instruções a serem avaliadas, por isso é só observar a reação dessas instruções no hello.c para saber se a saída é coerente ou não.
+
 ## Referências
 1. http://www.ic.unicamp.br/~lucas/teaching/mc723/2016-1/p2.html
 2. [**Tratamento de Hazards**](HAZARD_TREATMENT.md)
