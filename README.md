@@ -103,8 +103,9 @@ __Jpeg coder (small)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1 |  |  |  |  |  |  |
-| Miss L2 |  |  |  |  |  |  |
+| Miss L1-instr | 0.001 | 0.001 | 0.0007 | 0.0007 | 0.0001 | 0.0001 |
+| Miss L1-data | 0.0271 | 0.0271 | 0.0183 | 0.0183 | 0.0183 | 0.0183 |
+| Miss L2 | 0.434 | 0.434 | 0.4176 | 0.4176 | 0.1129 | 0.1129 |
 | Hazards | 8241245 | 4981313 | 3897393 |  |  |  |
 | Branch Realizados | 0 | 2219688 | 2219688 |  |  |  |
 | Branch Previstos | 0 | 3399132 | 2058392 |  |  |  |
@@ -116,8 +117,9 @@ __Rijndael coder (small)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1 |  |  |  |  |  |  |
-| Miss L2 |  |  |  |  |  |  |
+| Miss L1-instr | 0.0591 | 0.0591 | 0.027 | 0.027 | 0.0018 | 0.0018 |
+| Miss L1-data | 0.2188 | 0.2188 | 0.144 | 0.144 | 0.144 | 0.144 |
+| Miss L2 | 0.3382 | 0.3382 | 0.2268 | 0.2268 | 0.0817 | 0.0817 |
 | Hazards | 2497936 | 1897371 | 1626815 |  |  |  |
 | Branch Realizados | 0 | 496874 | 496874 |  |  |  |
 | Branch Previstos | 0 | 890057 | 576390 |  |  |  |
@@ -129,8 +131,9 @@ __GSM coder (large)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1 |  |  |  |  |  |  |
-| Miss L2 |  |  |  |  |  |  |
+| Miss L1-instr | 0.0066 | 0.0066 | 0.0017 | 0.0017 | 0.0007 | 0.0007 |
+| Miss L1-data | 0.0021 | 0.0021 | 0.0015 | 0.0015 | 0.0015 | 0.0015 |
+| Miss L2 | 0.1146 | 0.1146 | 0.0351 | 0.0351 | 0.0564 | 0.0564 |
 | Hazards | 3185272 | 2491191 | 1712797 |  |  |  |
 | Branch Realizados | 0 | 729028 | 729028 |  |  |  |
 | Branch Previstos | 0 | 1493003 | 484186 |  |  |  |
@@ -142,8 +145,9 @@ __Dijkstra (large)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1 |  |  |  |  |  |  |
-| Miss L2 |  |  |  |  |  |  |
+| Miss L1-instr | 0.0022 | 0.0022 | 0.0004 | 0.0004 | 0.0002 | 0.0002 |
+| Miss L1-data | 0.0309 | 0.0309 | 0.0157 | 0.0157 | 0.0157 | 0.0157 |
+| Miss L2 | 0.1767 | 0.1767 | 0.0476 | 0.0476 | 0.003 | 0.003 |
 | Hazards | 88107656 | 68515147 | 38220239 |  |  |  |
 | Branch Realizados | 0 | 17956084 | 17956084 |  |  |  |
 | Branch Previstos | 0 | 41909436 | 10499229 |  |  |  |
