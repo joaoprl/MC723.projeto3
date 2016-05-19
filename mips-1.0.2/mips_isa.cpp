@@ -113,8 +113,9 @@ void TestaControlHazard()
     }
   if(pipeline[0].type == branch)
     {
+      //SOURCE: https://www.cs.umd.edu/class/spring2012/cmsc411/lectures/lec05.pdf 5 stage + 1 from IT
         if (!taken)
-          bubble+=1;
+          bubble+=2;
         else
           bubble+=4;
       }
