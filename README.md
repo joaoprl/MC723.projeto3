@@ -99,67 +99,65 @@ Pra cada benchmark:
 | Configuração | Cache | Escalar ou Super | Branch Predictor | 
 | --- | --- | --- | --- |
 | Config1 | 1 | Escalar | Sem branch |
-| Config2 | 1 | Escalar | Estático |
-| Config3 | 2 | Escalar | Dinamico |
-| Config4 | 2 | Super | Sem branch |
-| Config5 | 3 | Super | Estático |
-| Config6 | 4 | Super | Dinamico |
+| Config2 | 2 | Escalar | Estático |
+| Config3 | 3 | Escalar | Dinamico |
+| Config4 | 4 | Super | Sem branch |
 
 __Jpeg coder (small)__
 
-| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
+| Eventos | Config1 | Config2 | Config3 | Config4 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.001 | 0.001 | 0.0007 | 0.0007 | 0.0001 | 0.0003 |
-| Miss L1-data | 0.0271 | 0.0271 | 0.0183 | 0.0183 | 0.0183 | 0.0198 |
-| Miss L2 | 0.434 | 0.434 | 0.4176 | 0.4176 | 0.1129 | 0.3092 |
-| Hazards | 8241245 | 4981313 | 3897393 |  |  |  |
-| Branch Realizados | 0 | 2219688 | 2219688 |  |  |  |
-| Branch Previstos | 0 | 3399132 | 2058392 |  |  |  |
-| Ciclos | 38098999 | 34839067 | 33755147 |  |  |  |
-| instruções | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 |
-| CPI | 1.28 | 1.17 | 1.13 |  |  |  |
+| Miss L1-instr | 0.001 | 0.0007 | 0.0001 | 0.0003 |
+| Miss L1-data | 0.0271 | 0.0183 | 0.0183 | 0.0198 |
+| Miss L2 | 0.434 | 0.4176 | 0.1129 | 0.3092 |
+| Hazards | 8241245 | 4981313 | 3897393 |  |
+| Branch Realizados | 0 | 2219688 | 2219688 |  |
+| Branch Previstos | 0 | 3399132 | 2058392 |  |
+| Ciclos | 38098999 | 34839067 | 33755147 |  |
+| instruções | 29857750 | 29857750 | 29857750 | 29857750 |
+| CPI | 1.28 | 1.17 | 1.13 |  |
 
 __Rijndael coder (small)__
 
-| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
+| Eventos | Config1 | Config2 | Config3 | Config4 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.0591 | 0.0591 | 0.027 | 0.027 | 0.0018 | 0.0748 |
-| Miss L1-data | 0.2188 | 0.2188 | 0.144 | 0.144 | 0.144 | 0.1926 |
-| Miss L2 | 0.3382 | 0.3382 | 0.2268 | 0.2268 | 0.0817 | 0.0706 |
-| Hazards | 2497936 | 1897371 | 1626815 |  |  |  |
-| Branch Realizados | 0 | 496874 | 496874 |  |  |  |
-| Branch Previstos | 0 | 890057 | 576390 |  |  |  |
-| Ciclos | 46059637 | 45459072 | 45188516 |  |  |  |
-| instruções | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 |
-| CPI | 1.06 | 1.04 | 1.04 |  |  |  |
+| Miss L1-instr | 0.0591 | 0.027 | 0.0018 | 0.0748 |
+| Miss L1-data | 0.2188 | 0.144 | 0.144 | 0.1926 |
+| Miss L2 | 0.3382 | 0.3382 | 0.2268 | 0.0817 | 0.0706 |
+| Hazards | 2497936 | 1897371 | 1626815 |  |
+| Branch Realizados | 0 | 496874 | 496874 |  |
+| Branch Previstos | 0 | 890057 | 576390 |  |
+| Ciclos | 46059637 | 45459072 | 45188516 |  |
+| instruções | 43561697 | 43561697 | 43561697 | 43561697 |
+| CPI | 1.06 | 1.04 | 1.04 |  |
 
 __GSM coder (large)__
 
-| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
+| Eventos | Config1 | Config2 | Config3 | Config4 | 
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.0066 | 0.0066 | 0.0017 | 0.0017 | 0.0007 | 0.0041 |
-| Miss L1-data | 0.0021 | 0.0021 | 0.0015 | 0.0015 | 0.0015 | 0.0001 |
-| Miss L2 | 0.1146 | 0.1146 | 0.0351 | 0.0351 | 0.0564 | 0.0166 |
-| Hazards | 3185272 | 2491191 | 1712797 |  |  |  |
-| Branch Realizados | 0 | 729028 | 729028 |  |  |  |
-| Branch Previstos | 0 | 1493003 | 484186 |  |  |  |
-| Ciclos | 30646228 | 29952147 | 29173753 |  |  |  |
-| instruções | 29857750 | 29857750 | 27460952 | 29857750 | 29857750 | 29857750 |
-| CPI | 1.12 | 1.09 | 1.06 |  |  |  |
+| Miss L1-instr | 0.0066 | 0.0017 | 0.0007 | 0.0041 |
+| Miss L1-data | 0.0021 | 0.0015 | 0.0015 | 0.0001 |
+| Miss L2 | 0.1146 | 0.0351 | 0.0564 | 0.0166 |
+| Hazards | 3185272 | 2491191 | 1712797 |  |
+| Branch Realizados | 0 | 729028 | 729028 |  |
+| Branch Previstos | 0 | 1493003 | 484186 |  |
+| Ciclos | 30646228 | 29952147 | 29173753 |  |
+| instruções | 29857750 | 29857750 | 27460952 | 29857750 |
+| CPI | 1.12 | 1.09 | 1.06 |  |
 
 __Dijkstra (large)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.0022 | 0.0022 | 0.0004 | 0.0004 | 0.0002 | 0.0004 |
-| Miss L1-data | 0.0309 | 0.0309 | 0.0157 | 0.0157 | 0.0157 | 0.0231 |
-| Miss L2 | 0.1767 | 0.1767 | 0.0476 | 0.0476 | 0.003 | 0.0621 |
-| Hazards | 88107656 | 68515147 | 38220239 |  |  |  |
-| Branch Realizados | 0 | 17956084 | 17956084 |  |  |  |
-| Branch Previstos | 0 | 41909436 | 10499229 |  |  |  |
-| Ciclos | 311799497 | 292206988 | 261912080 |  |  |  |
-| instruções | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 |
-| Tempo | 1.39 | 1.31 | 1.17 |  |  |  |
+| Miss L1-instr | 0.0022 | 0.0004 | 0.0002 | 0.0004 |
+| Miss L1-data | 0.0309 | 0.0157 | 0.0157 | 0.0231 |
+| Miss L2 | 0.1767 | 0.0476 | 0.003 | 0.0621 |
+| Hazards | 88107656 | 68515147 | 38220239 |  |
+| Branch Realizados | 0 | 17956084 | 17956084 |  |
+| Branch Previstos | 0 | 41909436 | 10499229 |  |
+| Ciclos | 311799497 | 292206988 | 261912080 |  |
+| instruções | 223691837 | 223691837 | 223691837 | 223691837 |
+| Tempo | 1.39 | 1.31 | 1.17 |  |
 
 ## Conclusão
 
