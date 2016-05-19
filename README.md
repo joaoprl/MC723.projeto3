@@ -105,11 +105,12 @@ __Jpeg coder (small)__
 | --- | --- | --- | --- | --- | --- | --- |
 | Miss L1 |  |  |  |  |  |  |
 | Miss L2 |  |  |  |  |  |  |
-| Hazards |  |  |  |  |  |  |
-| Branch Realizados |  |  |  |  |  |  |
-| Branch Previstos |  |  |  |  |  |  |
-| Ciclos |  |  |  |  |  |  |
-| Tempo |  |  |  |  |  |  |
+| Hazards | 8241245 | 4981313 | 3897393 |  |  |  |
+| Branch Realizados | 0 | 2219688 | 2219688 |  |  |  |
+| Branch Previstos | 0 | 3399132 | 2058392 |  |  |  |
+| Ciclos | 38098999 | 34839067 | 33755147 |  |  |  |
+| instruções | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 |
+| Tempo | 0.767 | 0.812 | 0.805 |  |  |  |
 
 __Rijndael coder (small)__
 
@@ -117,11 +118,12 @@ __Rijndael coder (small)__
 | --- | --- | --- | --- | --- | --- | --- |
 | Miss L1 |  |  |  |  |  |  |
 | Miss L2 |  |  |  |  |  |  |
-| Hazards |  |  |  |  |  |  |
-| Branch Realizados |  |  |  |  |  |  |
-| Branch Previstos |  |  |  |  |  |  |
-| Ciclos |  |  |  |  |  |  |
-| Tempo |  |  |  |  |  |  |
+| Hazards | 2497936 | 1897371 | 1626815 |  |  |  |
+| Branch Realizados | 0 | 496874 | 496874 |  |  |  |
+| Branch Previstos | 0 | 890057 | 576390 |  |  |  |
+| Ciclos | 46059637 | 45459072 | 45188516 |  |  |  |
+| instruções | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 |
+| Tempo | 1.077 | 1.089 | 1.192 |  |  |  |
 
 __GSM coder (large)__
 
@@ -129,11 +131,12 @@ __GSM coder (large)__
 | --- | --- | --- | --- | --- | --- | --- |
 | Miss L1 |  |  |  |  |  |  |
 | Miss L2 |  |  |  |  |  |  |
-| Hazards |  |  |  |  |  |  |
-| Branch Realizados |  |  |  |  |  |  |
-| Branch Previstos |  |  |  |  |  |  |
-| Ciclos |  |  |  |  |  |  |
-| Tempo |  |  |  |  |  |  |
+| Hazards | 3185272 | 2491191 | 1712797 |  |  |  |
+| Branch Realizados | 0 | 729028 | 729028 |  |  |  |
+| Branch Previstos | 0 | 1493003 | 484186 |  |  |  |
+| Ciclos | 30646228 | 29952147 | 29173753 |  |  |  |
+| instruções | 29857750 | 29857750 | 27460952 | 29857750 | 29857750 | 29857750 |
+| Tempo | 0.669 | 0.681 | 0.691 |  |  |  |
 
 __Dijkstra (large)__
 
@@ -141,11 +144,12 @@ __Dijkstra (large)__
 | --- | --- | --- | --- | --- | --- | --- |
 | Miss L1 |  |  |  |  |  |  |
 | Miss L2 |  |  |  |  |  |  |
-| Hazards |  |  |  |  |  |  |
-| Branch Realizados |  |  |  |  |  |  |
-| Branch Previstos |  |  |  |  |  |  |
-| Ciclos |  |  |  |  |  |  |
-| Tempo |  |  |  |  |  |  |
+| Hazards | 88107656 | 68515147 | 38220239 |  |  |  |
+| Branch Realizados | 0 | 17956084 | 17956084 |  |  |  |
+| Branch Previstos | 0 | 41909436 | 10499229 |  |  |  |
+| Ciclos | 311799497 | 292206988 | 261912080 |  |  |  |
+| instruções | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 |
+| Tempo | 5.596 | 6.309 | 6.687 |  |  |  |
 
 ## Conclusão
 
