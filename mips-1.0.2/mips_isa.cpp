@@ -156,10 +156,10 @@ void checkhazards(){
 	for (int i = PIPELINE_SIZE-1; i >= 2; i--){
 		FIRST_PIPE(i) = FIRST_PIPE(i-1);
 		SECOND_PIPE(i) = SECOND_PIPE(i-1);
-    }
+        }
     
-    char non_updated[32];
-    get_non_updated_mask(non_updated);
+        char non_updated[32];
+        get_non_updated_mask(non_updated);
     
 	FIRST_PIPE(1) = SECOND_PIPE(1) = BUBBLE;
 	//Se ambos registradores r2 e r3 nao terao seus valores atualizados a tempo
@@ -175,12 +175,10 @@ void checkhazards(){
 			non_updated[ NON_CURRENT_PIPELINE(1).r1 ] = 1;
 	}
 	//TODO: The error is here
-	if((non_updated[ PIPELINE(0).r2 ] == 1 || non_updated[ PIPELINE(0).r3] == 1) || /** RAW com problemas de load **/
-	   ( NON_CURRENT_PIPELINE(0).r1 != 0 && (NON_CURRENT_PIPELINE(0).r1 == PIPELINE(0).r2 || NON_CURRENT_PIPELINE(0).r1 == PIPELINE(0).r3)) || /** RAW **/
-	   ( NON_CURRENT_PIPELINE(1).r1 != 0 && (NON_CURRENT_PIPELINE(1).r1 == PIPELINE(0).r2 || NON_CURRENT_PIPELINE(1).r1 == PIPELINE(0).r3)) || /** RAW **/
-	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r1) || (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(1).r1)) || /** WAW **/ 
-	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r2 || PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r3 )) || /** WAR **/
-	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(1).r2 || PIPELINE(0).r1 == NON_CURRENT_PIPELINE(1).r3 )) /** WAR **/){
+	if((non_updated[ PIPELINE(0).r2 ] == 1 || non_updated[ PIPELINE(0).r3] == 1)  || // RAW com problemas de load
+	   ( NON_CURRENT_PIPELINE(0).r1 != 0 && (NON_CURRENT_PIPELINE(0).r1 == PIPELINE(0).r2 || NON_CURRENT_PIPELINE(0).r1 == PIPELINE(0).r3)) || // RAW
+	   ( PIPELINE(0).r1 != 0 && PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r1) || // WAW
+	   ( PIPELINE(0).r1 != 0 && (PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r2 || PIPELINE(0).r1 == NON_CURRENT_PIPELINE(0).r3 ))  ) { // WAR
 		dbg_printf("BUBBLE DETECTED on %d -- current\n", (current_pipe_index+1));
 		bubble++;
 	} else {
