@@ -132,38 +132,44 @@ void TestaControlHazard()
 
 
       if (BR_PR == 1)
-	{
-	  if(taken != hPredictor)
-	    {
-	      hPredictor = taken;
-	      bubble += 2;
-	      return;
-	    }
+    {
+      if(taken != hPredictor)
+        {
+          hPredictor = taken;
+          bubble += 2;
+          return;
+        }
       else
       {
         bubble+=1;
         return;
       }
-	}
+    }
       else if (BP_PR == 2) //-bit predictor
-	{
-	  if (taken != hPredictor)
-	    {
-	      bubble += 3;
-	      count++;
-	      if (count >1)
-		{
-		  count = 0;
-		  hPredictor = taken;
-		}
-	    }
-	  else
-	    count = 0;
-          bubble+=1;
-	}
+    {
+      if (taken != hPredictor)
+        {
+          bubble += 2;
+          count++;
+          if (count >1)
+        {
+          count = 0;
+          hPredictor = taken;
+        }
+        }
+      else //acertou
+        {
+        count = 0;
+          if(taken)
+            bubble+=1;
+        }
+    }
       else //BP_PR == 0
       {
-          bubble+=3;
+          if (!taken)
+            bubbles++;
+          else
+            bubbles+=3;
       }
     }
   return;
