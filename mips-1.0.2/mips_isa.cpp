@@ -58,7 +58,7 @@ struct MyInstruction {
 MyInstruction null_instruction = { .type = undefined, .r1 = 0, .r2 = 0, .r3 = 0 };
 int bubble = 0;
 
-#define PIPELINE_SIZE 5
+#define PIPELINE_SIZE 7
 MyInstruction pipeline[PIPELINE_SIZE];
 
 void checkhazards(){
@@ -71,7 +71,7 @@ void checkhazards(){
   // Caso RAW
   if(pipeline[1].type == load && (pipeline[1].r1 == pipeline[0].r2 || pipeline[1].r1 == pipeline[0].r3)) {
     dbg_printf("DATA HAZARD DETECTED\n");
-    bubble++;
+    bubble+=2 ;
   }
 }
 
@@ -109,63 +109,15 @@ void TestaControlHazard()
 {
   if (pipeline[0].type == jump)
     {
-      bubble += 1; //mudei TRAKINAS
+      bubble += 2; //mudei TRAKINAS
     }
   if(pipeline[0].type == branch)
     {
-
-
-      if (BP_PR == 1) {
-        branchPrevistos++;
-        if (taken)
-          branchRealizados++;
-      }
-
-      if (BP_PR == 2) {
-        if (hPredictor == 1) {
-          branchPrevistos++;
-        }
-
-        if (taken)
-          branchRealizados++;
-      }
-
-
-      if (BR_PR == 1)
-	{
-	  if(taken != hPredictor)
-	    {
-	      hPredictor = taken;
-	      bubble += 2;
-	      return;
-	    }
-      else
-      {
-        bubble+=1;
-        return;
-      }
-	}
-      else if (BP_PR == 2) //-bit predictor
-	{
-	  if (taken != hPredictor)
-	    {
-	      bubble += 3;
-	      count++;
-	      if (count >1)
-		{
-		  count = 0;
-		  hPredictor = taken;
-		}
-	    }
-	  else
-	    count = 0;
+        if (!taken)
           bubble+=1;
-	}
-      else //BP_PR == 0
-      {
-          bubble+=3;
+        else
+          bubble+=4;
       }
-    }
   return;
 }
 
