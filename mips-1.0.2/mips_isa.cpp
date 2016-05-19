@@ -109,14 +109,14 @@ void TestaControlHazard()
 {
   if (pipeline[0].type == jump)
     {
-      bubble += 2; //mudei TRAKINAS
+      bubble += 3; 
     }
   if(pipeline[0].type == branch)
     {
         if (!taken)
           bubble+=1;
         else
-          bubble+=4;
+          bubble+=14; // http://i.stack.imgur.com/9dQt4.png
       }
   return;
 }
