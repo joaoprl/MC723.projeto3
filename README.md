@@ -24,7 +24,7 @@ Os objetivos do projeto foram medir desempenho de um processador em certos ponto
 * Processador escalar vs superescalar
 * Hazard de dados e controle
 * Branch predictor (3 configurações distintas)
-* Cache (3 configurações distintas)
+* Cache (4 configurações distintas)
 
 Escolhemos certos benchmarks para avaliarmos esses parâmetros:
 * Jpeg coder (small)
@@ -40,7 +40,7 @@ As propriedades que avaliaremos serão:
 * Numero de branchs realizados
 * Número de branchs previstos
 * Ciclos 
-* Tempo
+* CPI
 
 #### Cache
 
@@ -56,12 +56,14 @@ Eis as configurações de cache utilizadas:
   1. Configuração encontrada no exercício 2 por um dos integrantes.
   2. Baseado no processador AMD FX-8350
   3. Baseado no processador AMD Athlon II P340
+  4. Baseado no Intel i7
  
-|Config | L1 isize | L1 ibsize | L1 dsize | L1 dbsize | L2 usize | L2 ubsize |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | 32k | 64 | 64k | 64 | 256k | 16 |
-| 2 | 128k | 64 | 128k | 64 | 1024k | 64 |
-| 3 | 256k | 64 | 128k | 64 | 8192k | 64 |
+|Config | L1 isize | L1 ibsize | L1 dsize | L1 dbsize | L2 usize | L2 ubsize | L1 iassoc | L1 dassoc | L2uassoc
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 32k | 64 | 64k | 64 | 256k | 16 | 1 | 1 | 1 |
+| 2 | 128k | 64 | 128k | 64 | 1024k | 64 | 1 | 1 | 1 |
+| 3 | 256k | 64 | 128k | 64 | 8192k | 64 | 1 | 1 | 1 |
+| 4 | 32k | 64 | 32k | 64 | 256k | 64 | 4 | 8 | 8 |
 
 
 #### Hazards de dados
@@ -80,11 +82,15 @@ Outro possível caso, é quando duas instruções ao estarem no IF do pipeline a
 #### Hazards de Controle
 Foram feitos três tipos de configurações em relação ao branch prediction: sem branch prediction, branch prediction always taken e branch prediction 2-bit prediction.
 
-__Sem Branch prediction:__ O código apenas soma as bolhas que ocorrem.
+__Sem Branch prediction:__ O código apenas soma as bolhas que ocorrem. Caso o branch ocorra, adiciona-se três bolhas, caso não, adiciona-se uma (pipeline de 5 estágios).
 
-__Branch Prediction Always Taken:__ Neste caso, só é contabilizada as bolhas caso o branch não ocorrer. No código, existe uma variável que verifica se o branch foi feito. Caso não tenha sido feito, contabiliza as bolhas a mais.
+__Branch Prediction Always Taken:__ Neste caso, só é contabilizada as bolhas caso o branch não ocorrer. No código, existe uma variável que verifica se o branch foi feito. Caso não tenha sido feito, contabiliza as bolhas a mais. Caso o predictor tenha acertado, adiciona-se somente uma bolha, caso erre, adiciona-se duas bolhas (pipeline de 5 estágios).
 
-__Branch Prediction 2-bit predictor:__ Por fim, utiliza uma verificação dependendo de quantas vezes foi errada a predição, modificando-a caso tenha ocorrido, porém toda vez que erra, é contabilizada as bolhas. Por exemplo: predictor começa como taken; caso erre a predição 2 vezes, predictor se torna not taken, e por assim vai.
+__Branch Prediction 2-bit predictor:__ Por fim, utiliza uma verificação dependendo de quantas vezes foi errada a predição, modificando-a caso tenha ocorrido, porém toda vez que erra, é contabilizada as bolhas. Por exemplo: predictor começa como taken; caso erre a predição 2 vezes, predictor se torna not taken, e por assim vai. Caso o predicotor tenha acertado, se o branch for feito, adiciona-se uma bolha, caso o branch não seja feito, não se adiciona bolha. Caso ele erre, adiciona-se duas bolhas (pipeline de 5 estágios).
+
+#### CPI
+
+Calculamos CPI com a fórmula: CPI = [ número de instruções + ( número de estágios do pipeline - 1 ) + número de bolhas ] / (número de instruções).
 
 ## Análise de Resultados
 
@@ -97,99 +103,67 @@ Pra cada benchmark:
 | Config3 | 2 | Escalar | Dinamico |
 | Config4 | 2 | Super | Sem branch |
 | Config5 | 3 | Super | Estático |
-| Config6 | 3 | Super | Dinamico |
+| Config6 | 4 | Super | Dinamico |
 
 __Jpeg coder (small)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.001 | 0.001 | 0.0007 | 0.0007 | 0.0001 | 0.0001 |
-| Miss L1-data | 0.0271 | 0.0271 | 0.0183 | 0.0183 | 0.0183 | 0.0183 |
-| Miss L2 | 0.434 | 0.434 | 0.4176 | 0.4176 | 0.1129 | 0.1129 |
+| Miss L1-instr | 0.001 | 0.001 | 0.0007 | 0.0007 | 0.0001 | 0.0003 |
+| Miss L1-data | 0.0271 | 0.0271 | 0.0183 | 0.0183 | 0.0183 | 0.0198 |
+| Miss L2 | 0.434 | 0.434 | 0.4176 | 0.4176 | 0.1129 | 0.3092 |
 | Hazards | 8241245 | 4981313 | 3897393 |  |  |  |
 | Branch Realizados | 0 | 2219688 | 2219688 |  |  |  |
 | Branch Previstos | 0 | 3399132 | 2058392 |  |  |  |
 | Ciclos | 38098999 | 34839067 | 33755147 |  |  |  |
 | instruções | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 | 29857750 |
 | CPI | 1.28 | 1.17 | 1.13 |  |  |  |
-| Tempo | 0.767 | 0.812 | 0.805 |  |  |  |
 
 __Rijndael coder (small)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.0591 | 0.0591 | 0.027 | 0.027 | 0.0018 | 0.0018 |
-| Miss L1-data | 0.2188 | 0.2188 | 0.144 | 0.144 | 0.144 | 0.144 |
-| Miss L2 | 0.3382 | 0.3382 | 0.2268 | 0.2268 | 0.0817 | 0.0817 |
+| Miss L1-instr | 0.0591 | 0.0591 | 0.027 | 0.027 | 0.0018 | 0.0748 |
+| Miss L1-data | 0.2188 | 0.2188 | 0.144 | 0.144 | 0.144 | 0.1926 |
+| Miss L2 | 0.3382 | 0.3382 | 0.2268 | 0.2268 | 0.0817 | 0.0706 |
 | Hazards | 2497936 | 1897371 | 1626815 |  |  |  |
 | Branch Realizados | 0 | 496874 | 496874 |  |  |  |
 | Branch Previstos | 0 | 890057 | 576390 |  |  |  |
 | Ciclos | 46059637 | 45459072 | 45188516 |  |  |  |
 | instruções | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 | 43561697 |
 | CPI | 1.06 | 1.04 | 1.04 |  |  |  |
-| Tempo | 1.077 | 1.089 | 1.192 |  |  |  |
 
 __GSM coder (large)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.0066 | 0.0066 | 0.0017 | 0.0017 | 0.0007 | 0.0007 |
-| Miss L1-data | 0.0021 | 0.0021 | 0.0015 | 0.0015 | 0.0015 | 0.0015 |
-| Miss L2 | 0.1146 | 0.1146 | 0.0351 | 0.0351 | 0.0564 | 0.0564 |
+| Miss L1-instr | 0.0066 | 0.0066 | 0.0017 | 0.0017 | 0.0007 | 0.0041 |
+| Miss L1-data | 0.0021 | 0.0021 | 0.0015 | 0.0015 | 0.0015 | 0.0001 |
+| Miss L2 | 0.1146 | 0.1146 | 0.0351 | 0.0351 | 0.0564 | 0.0166 |
 | Hazards | 3185272 | 2491191 | 1712797 |  |  |  |
 | Branch Realizados | 0 | 729028 | 729028 |  |  |  |
 | Branch Previstos | 0 | 1493003 | 484186 |  |  |  |
 | Ciclos | 30646228 | 29952147 | 29173753 |  |  |  |
 | instruções | 29857750 | 29857750 | 27460952 | 29857750 | 29857750 | 29857750 |
 | CPI | 1.12 | 1.09 | 1.06 |  |  |  |
-| Tempo | 0.669 | 0.681 | 0.691 |  |  |  |
 
 __Dijkstra (large)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Miss L1-instr | 0.0022 | 0.0022 | 0.0004 | 0.0004 | 0.0002 | 0.0002 |
-| Miss L1-data | 0.0309 | 0.0309 | 0.0157 | 0.0157 | 0.0157 | 0.0157 |
-| Miss L2 | 0.1767 | 0.1767 | 0.0476 | 0.0476 | 0.003 | 0.003 |
+| Miss L1-instr | 0.0022 | 0.0022 | 0.0004 | 0.0004 | 0.0002 | 0.0004 |
+| Miss L1-data | 0.0309 | 0.0309 | 0.0157 | 0.0157 | 0.0157 | 0.0231 |
+| Miss L2 | 0.1767 | 0.1767 | 0.0476 | 0.0476 | 0.003 | 0.0621 |
 | Hazards | 88107656 | 68515147 | 38220239 |  |  |  |
 | Branch Realizados | 0 | 17956084 | 17956084 |  |  |  |
 | Branch Previstos | 0 | 41909436 | 10499229 |  |  |  |
 | Ciclos | 311799497 | 292206988 | 261912080 |  |  |  |
 | instruções | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 | 223691837 |
-| CPI | 1.39 | 1.31 | 1.17 |  |  |  |
-| Tempo | 5.596 | 6.309 | 6.687 |  |  |  |
-
-Em relação ao número de estágios do pipeline, podemos comparar com a configuração 1.
-
-__Jpeg coder (small)__
-
-| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
-| --- | --- | --- | --- | --- | --- |
-| 7 | 0.746 | 12043114 | 29857750 | 41900870 | 1.40 |
-| 13 |  |  |  |  |  |
-
-__Rijndael coder (small)__
-
-| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
-| --- | --- | --- | --- | --- | --- |
-| 7 | 1.089 | 4002124 | 43561697 | 47563827 | 1.09 |
-| 13 |  |  |  |  |  |
-
-__GSM coder (large)__
-
-| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
-| --- | --- | --- | --- | --- | --- |
-| 7 | 0.716 | 4912488 | 27460952 | 32373446 | 1.18 |
-| 13 |  |  |  |  |  |
-
-__Dijkstra (large)__
-
-| PIPELINE | Tempo | Hazards | Instruções | Ciclos | CPI |
-| --- | --- | --- | --- | --- | --- |
-| 7 | 5.444 | 140303144 | 223691837 | 363994987 | 1.63 |
-| 13 |  |  |  |  |  |
+| Tempo | 1.39 | 1.31 | 1.17 |  |  |  |
 
 ## Conclusão
+
+Vemos que o Branch Predictor teve os menores valores para CPI, o que mostra que está aumentando a eficiência.-> MELHORAR ISSO
 
 É possível dizer que os resultados foram coerentes, já que a princípio utilizamos o código do hello.c inicialmente para testar as configurações. Como a mudança feita é no código do mips_isa.cpp, os benchmarks influenciam apenas nas instruções a serem avaliadas, por isso é só observar a reação dessas instruções no hello.c para saber se a saída é coerente ou não.
 
