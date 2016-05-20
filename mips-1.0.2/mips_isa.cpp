@@ -26,7 +26,7 @@
 
 
 //If you want debug information for this model, uncomment next line
-#define DEBUG_MODEL
+//#define DEBUG_MODEL
 #include "ac_debug_model.H"
 
 
@@ -247,6 +247,29 @@ int branchRealizados = 0;
 
 void TestaControlHazard()
 {
+	#ifdef IS_SUPERESCALAR
+	if(FIRST_PIPE(0).type != undefined && SECOND_PIPE(0).type != undefined){
+		if (NON_CURRENT_PIPELINE(0).type == jump){
+			bubble += 3; //mudei TRAKINAS
+		} else if (PIPELINE(0).type == jump) {
+			bubble += 2;
+		}
+		
+		if(NON_CURRENT_PIPELINE(0).type == branch) {
+			//No branch prediction
+			if (!taken)
+				bubble+=3;
+			else
+				bubble+=5;
+		} else if (PIPELINE(0).type == branch ) {
+			//No branch prediction
+			if (!taken)
+				bubble+=2;
+			else
+				bubble+=4;
+		}
+	}
+	#else
   if (PIPELINE(0).type == jump)
     {
       bubble += 1; //mudei TRAKINAS
@@ -313,6 +336,7 @@ void TestaControlHazard()
       }
     }
   return;
+  #endif
 }
 
 void update()
