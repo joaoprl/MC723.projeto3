@@ -26,7 +26,7 @@
 
 
 //If you want debug information for this model, uncomment next line
-#define DEBUG_MODEL
+//#define DEBUG_MODEL
 #include "ac_debug_model.H"
 
 
@@ -116,7 +116,7 @@ void TestaControlHazard()
         if (!taken)
           bubble+=1;
         else
-          bubble+=14; // http://i.stack.imgur.com/9dQt4.png
+          bubble+=8; // http://i.stack.imgur.com/9dQt4.png
       }
   return;
 }
