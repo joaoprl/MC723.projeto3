@@ -119,6 +119,8 @@ __Jpeg coder (small)__
 
 __Rijndael coder (small)__
 
+Foi usado o encode little endian
+
 | Eventos | Config1 | Config2 | Config3 | Config4 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Miss L1-instr | 0.0591 | 0.027 | 0.0018 | 0.0748 |
@@ -131,7 +133,7 @@ __Rijndael coder (small)__
 | instruções | 43561697 | 43561697 | 43561697 | 43561697 |
 | CPI | 1.06 | 1.04 | 1.04 | 1.13 |
 
-__GSM coder (large)__
+__GSM coder (small)__
 
 | Eventos | Config1 | Config2 | Config3 | Config4 | 
 | --- | --- | --- | --- | --- | --- | --- |
@@ -147,8 +149,8 @@ __GSM coder (large)__
 
 __Dijkstra (large)__
 
-| Eventos | Config1 | Config2 | Config3 | Config4 | Config5 | Config6 |
-| --- | --- | --- | --- | --- | --- | --- |
+| Eventos | Config1 | Config2 | Config3 | Config4 |
+| --- | --- | --- | --- | --- |
 | Miss L1-instr | 0.0022 | 0.0004 | 0.0002 | 0.0004 |
 | Miss L1-data | 0.0309 | 0.0157 | 0.0157 | 0.0231 |
 | Miss L2 | 0.1767 | 0.0476 | 0.003 | 0.0621 |
@@ -158,6 +160,14 @@ __Dijkstra (large)__
 | Ciclos | 311799497 | 292206988 | 261912080 | 336566324 |
 | instruções | 223691837 | 223691837 | 223691837 | 223691837 |
 | Tempo | 1.39 | 1.31 | 1.17 | 1.50 |
+
+
+| Benchmark | Pipeline 7 Bolhas | Pipeline 13 Bolhas |
+| --- | --- | --- |
+| Jpeg coder (small) | 12043114 | 20144258 |
+| Dijkstra (large) | 140303144 | 197594002 |
+| Gsm coder (small) | 4912488 | 7290724 |
+| Rijndael coder (small) | 4002124 | 6151725 |
 
 ## Conclusão
 
