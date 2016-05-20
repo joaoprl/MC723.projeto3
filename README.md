@@ -171,10 +171,14 @@ __Dijkstra (large)__
 
 ## Conclusão
 
-Vemos que o Branch Predictor teve os menores valores para CPI, o que mostra que está aumentando a eficiência.-> MELHORAR ISSO
+Vemos que o Branch Predictor teve os menores valores para CPI, o que mostra que ocorre uma melhoria na eficiência da resposta aos branchs. Isso mostra também que ao usar Branch Predctor Dinâmico ao invés de Estático o número de hazard de controle diminuirá.
+
+Outra observação, é que ao usar um pipeline superescalar, o número de hazards aumenta. Isso ocorre pois existem tipos diferentes de hazards (WAR e WAW), o que é demonstrado na tabela.
 
 É possível dizer que os resultados foram coerentes, já que a princípio utilizamos o código do hello.c inicialmente para testar as configurações. Como a mudança feita é no código do mips_isa.cpp, os benchmarks influenciam apenas nas instruções a serem avaliadas, por isso é só observar a reação dessas instruções no hello.c para saber se a saída é coerente ou não.
 
 ## Referências
 1. http://www.ic.unicamp.br/~lucas/teaching/mc723/2016-1/p2.html
 2. [**Tratamento de Hazards**](HAZARD_TREATMENT.md)
+3. http://i.stack.imgur.com/9dQt4.png
+4. https://www.cs.umd.edu/class/spring2012/cmsc411/lectures/lec05.pdf
